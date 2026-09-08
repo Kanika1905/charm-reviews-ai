@@ -113,7 +113,7 @@ function CustomerReviewPage() {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title: `Review ${business.name}`, url });
+        await navigator.share({ title: `Review ${business?.name ?? ""}`, url });
         return;
       }
       await navigator.clipboard.writeText(url);
