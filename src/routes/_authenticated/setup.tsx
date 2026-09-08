@@ -427,17 +427,39 @@ function SetupPage() {
                 </div>
 
                 {draft.published && draft.slug && (
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Customer page:{" "}
-                    <a
-                      href={`/r/${draft.slug}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-semibold text-primary underline-offset-4 hover:underline"
-                    >
-                      /r/{draft.slug}
-                    </a>
-                  </p>
+                  <div className="mt-4 rounded-2xl bg-background p-4 ring-1 ring-border">
+                    <p className="text-xs font-semibold">Shareable customer review link</p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">/r/{draft.slug}</p>
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const link = `${window.location.origin}/r/${draft.slug}`;
+                          try {
+                            if (navigator.share) {
+                              await navigator.share({ title: draft.name, url: link });
+                              return;
+                            }
+                            await navigator.clipboard.writeText(link);
+                            toast.success("Review page link copied.");
+                          } catch {
+                            toast.error("Could not copy the link.");
+                          }
+                        }}
+                        className="flex-1 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground"
+                      >
+                        Share review page
+                      </button>
+                      <a
+                        href={`/r/${draft.slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex-1 rounded-xl bg-card py-3 text-center text-sm font-semibold ring-1 ring-border"
+                      >
+                        Open page
+                      </a>
+                    </div>
+                  </div>
                 )}
               </>
             )}
